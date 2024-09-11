@@ -1,4 +1,4 @@
-class Memory(ABC):
+class Memory:
 
     def __init__(self):
         self.__last_behaviour = None
