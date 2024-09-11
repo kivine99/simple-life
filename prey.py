@@ -3,8 +3,6 @@ from animal import Animal
 class Prey(Animal):
     def __init__(self, position, direction, vision_range, fov, max_speed, curr_speed, memory, genome, radius, color):
         """
-        Constructor.
-
         Args:
             position (tuple): The initial (x, y) position of the animal.
             direction (float): The initial direction in radians, normalized between 0 and 2π.
