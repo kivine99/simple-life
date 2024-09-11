@@ -1,7 +1,19 @@
 from animal import Animal
+from memory import Memory
+from genome import Genome
 
 class Predator(Animal):
-    def __init__(self, position, direction, vision_range, fov, max_speed, curr_speed, memory, genome, radius, color):
+    def __init__(self, 
+    position: tuple,
+    direction: float, 
+    vision_range: float, 
+    fov: float, 
+    max_speed: float, 
+    curr_speed: float, 
+    memory: Memory, 
+    genome: Genome, 
+    radius: float, 
+    color: tuple):
         """
         Args:
             position (tuple): The initial (x, y) position of the animal.
