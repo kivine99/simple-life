@@ -72,11 +72,9 @@ class Animal(ABC):
         """
         return self.__curr_speed
 
-    @abstractmethod
     def get_memory(self):
         pass
 
-    @abstractmethod
     def get_genome(self):
         pass
 
