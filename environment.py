@@ -27,3 +27,21 @@ class Environment:
             tuple[Predators]: An immutable tuple of predators.
         """
         return tuple(self.__predators)
+
+    def add_prey(self, prey_to_add: Prey) -> None:
+        """
+        Add new prey to the environment
+
+        Args:
+            prey_to_add (Prey): Prey to add to the prey list.
+        """
+        self.__prey.append(prey_to_add)
+
+    def add_predator(self, predator_to_add: Predator) -> None:
+        """
+        Add new predator to the environment
+
+        Args:
+            predator_to_add (Predator): predator to add to the predator list.
+        """
+        self.__predator.append(predator_to_add)
