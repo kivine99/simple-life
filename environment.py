@@ -1,32 +1,43 @@
 from prey import Prey
 from predator import Predator
+from plant import Plant
 from typing import Tuple
 
 class Environment:
     def __init__(self, 
     prey: List[Prey], 
-    predators: List[Predators]):
+    predators: List[Predators],
+    plants: List[Plant]):
         """
         Args:
             prey (List[Prey]): List of prey.
             predators (List[Predators]): List of predators.
+            plants (List[Plant]): List of plants.
         """
         self.__prey = prey
         self.__predators = predators
+        self.__plants = plants
 
     def get_prey(self) -> Tuple[Prey, ...]:
         """
         Returns:
-            tuple[Prey]: An immutable tuple of prey.
+            tuple[Prey]: A tuple of prey.
         """
         return tuple(self.__prey)
 
     def get_predators(self) -> Tuple[Predator, ...]:
         """
         Returns:
-            tuple[Predators]: An immutable tuple of predators.
+            tuple[Predators]: A tuple of predators.
         """
         return tuple(self.__predators)
+
+    def get_plants(self) -> Tuple[Plant, ...]:
+        """
+        Returns:
+            tuple[Plant]: A tuple of plants.
+        """
+        return tuple(self.__plants)
 
     def add_prey(self, prey_to_add: Prey) -> None:
         """
