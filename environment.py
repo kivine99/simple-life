@@ -5,9 +5,9 @@ from typing import Tuple
 
 class Environment:
     def __init__(self, 
-    prey: List[Prey], 
-    predators: List[Predators],
-    plants: List[Plant]):
+    prey: list[Prey], 
+    predators: list[Predator],
+    plants: list[Plant]):
         """
         Args:
             prey (List[Prey]): List of prey.
