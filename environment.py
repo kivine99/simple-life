@@ -8,21 +8,24 @@ class Environment:
     prey: list[Prey], 
     predators: list[Predator],
     plants: list[Plant]):
-        self.__prey = prey
-        self.__predators = predators
-        self.__plants = plants
+        self._prey = prey
+        self._predators = predators
+        self._plants = plants
 
     def get_prey(self) -> Tuple[Prey, ...]:
-        return tuple(self.__prey)
+        return tuple(self._prey)
 
     def get_predators(self) -> Tuple[Predator, ...]:
-        return tuple(self.__predators)
+        return tuple(self._predators)
 
     def get_plants(self) -> Tuple[Plant, ...]:
-        return tuple(self.__plants)
+        return tuple(self._plants)
 
     def add_prey(self, prey_to_add: Prey) -> None:
-        self.__prey.append(prey_to_add)
+        self._prey.append(prey_to_add)
 
     def add_predator(self, predator_to_add: Predator) -> None:
-        self.__predator.append(predator_to_add)
+        self._predator.append(predator_to_add)
+
+    def remove_plant(self, plant_to_remove: Plant) -> None:
+        self._plants.remove(plant_to_remove)
