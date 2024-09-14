@@ -3,7 +3,7 @@ from memory import Memory
 from genome import Genome
 from pygame.math import Vector2
 
-class Predator(Animal):
+class Prey(Animal):
     def __init__(self, 
     position: Vector2, 
     velocity: Vector2,
