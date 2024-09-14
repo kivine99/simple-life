@@ -2,9 +2,11 @@ from environment import Environment
 from prey import Prey
 from predator import Predator
 from plant import Plant
+from memory import Memory
 from pygame.math import Vector2
 import random
 from typing import Tuple
+import math
 
 class EnvironmentSetup:
     def __init__(self, map_size: Tuple[int, int], num_prey: int, num_predators: int, num_plants: int):
@@ -24,12 +26,12 @@ class EnvironmentSetup:
                 position=prey_position,
                 velocity=Vector2(0, 0),  
                 mass=1.0,
-                max_force=2,
+                max_force=.1,
                 max_speed=2.0,
                 orientation=0.0,
-                vision_range=50.0,
-                fov=90.0,
-                memory=None, 
+                vision_range=150.0,
+                fov=3*math.pi/4,
+                memory=Memory(), 
                 genome=None,
                 radius=5.0,
                 color=(255, 0, 0)  
