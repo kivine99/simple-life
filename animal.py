@@ -44,6 +44,9 @@ class Animal(ABC):
     def get_fov(self) -> float:
         return self._fov
 
+    def get_memory(self) -> Memory:
+        return self._memory
+
     def get_max_speed(self) -> float:
         return self._max_speed
 
@@ -69,4 +72,17 @@ class Animal(ABC):
             self._velocity = self._velocity.clamp_magnitude(self._max_speed)
 
         self._position += self._velocity
-        self._orientation = math.atan2(self._velocity.y, self._velocity.x)%(math.pi*2)    
+        self._orientation = math.atan2(self._velocity.y, self._velocity.x)%(math.pi*2) 
+
+    def within_view(self, target_position: Vector2) -> bool:
+        distance_to_target = (target_position - self._position).length()
+
+        if distance_to_target > self._vision_range:
+            return False
+
+        angle_to_target = math.atan2(to_target.y, to_target.x)%(2*math.pi)
+        angle_difference = abs(angle_to_target - self._orientation)
+
+        angle_difference = min(angle_difference, 2*math.pi - angle_difference)
+
+        return angle_difference <= (self._fov / 2)
