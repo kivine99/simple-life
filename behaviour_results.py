@@ -9,10 +9,10 @@ class BehaviourResult(ABC):
 
 class EatPlantBehaviourResult(BehaviourResult):
     def __init__(self, eaten_plant: Plant):
-        self.__eaten_plant = eaten_plant
+        self._eaten_plant = eaten_plant
 
     def apply_to_environment(self, environment: Environment) -> None:
-        environment.remove_plant(self.__eaten_plant)
+        environment.remove_plant(self._eaten_plant)
 
 class NoEffectBehaviourResult(BehaviourResult):
     def __init__(self):
