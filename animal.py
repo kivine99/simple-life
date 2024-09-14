@@ -74,7 +74,8 @@ class Animal(ABC):
         self._position += self._velocity
         self._orientation = math.atan2(self._velocity.y, self._velocity.x)%(math.pi*2) 
 
-    def within_view(self, target_position: Vector2) -> bool:
+    def is_within_view(self, target_position: Vector2) -> bool:
+        to_target = target_position - self._position
         distance_to_target = (target_position - self._position).length()
 
         if distance_to_target > self._vision_range:
