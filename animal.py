@@ -50,41 +50,23 @@ class Animal(ABC):
     def get_velocity(self) -> Vector2:
         return self._velocity
 
-    # def get_memory(self) -> Memory:
-    #     pass
-
-    # def get_genome(self) -> Genome:
-    #     pass
-
     def get_radius(self) -> float:
-        return self.__radius
+        return self._radius
 
     def get_color(self) -> tuple:
-        return self.__color
+        return self._color
 
     def set_orientation(self, orientation: float) -> None:
-        self.__orientation = orientation%(2*math.pi)
+        self._orientation = orientation%(2*math.pi)
 
     def apply_force(self, force: Vector2) -> None:
-        if force.length() > self._max_force:
-            force = force.normalize() * self._max_force
-
+        if force.length() != 0:
+            force = force.clamp_magnitude(self._max_force)
         acceleration = force / self._mass
 
         self._velocity += acceleration
-
-        if self._velocity.length() > self._max_speed:
-            self._velocity = self._velocity.normalize() * self._max_speed
+        if self._velocity.length() != 0:
+            self._velocity = self._velocity.clamp_magnitude(self._max_speed)
 
         self._position += self._velocity
-
-    # def set_position(self, new_position: tuple) -> None:
-    #     """
-    #     Sets the new position of the animal. Does not check if new position is within proper bounds.
-
-    #     Args:
-    #         new_position (tuple): The new (x, y) position of the animal.
-    #     """
-    #     if len(new_position) != 2:
-    #         raise ValueError("Position must be a tuple of length 2.")
-    #     self.__position = new_position
+        self._orientation = math.atan2(self._velocity.y, self._velocity.x)%(math.pi*2)    
