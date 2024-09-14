@@ -6,16 +6,31 @@ from plant import Plant
 from environment import Environment
 from sim_controller import SimController
 import math
+from pygame.math import Vector2
+
 
 pygame.init()
 
 screen_width = 800
-screen_height = 600
+screen_height = 800
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Simple life')
 
-prey = Prey(position=(250,250), direction=math.pi/2, vision_range=100, fov=math.pi/2, max_speed=1.5, curr_speed=1, memory=None, genome=None, radius=15, color=(255,0,0))
+prey = Prey(
+    position=Vector2(400, 400),  
+    velocity=Vector2(0, 0),        
+    mass=1.0,                      
+    max_force=.1,           
+    max_speed=2.0,            
+    orientation=0.0,                
+    vision_range=50.0,               
+    fov=math.radians(90),            
+    memory=None,               
+    genome=None,                 
+    radius=5.0,                      
+    color=(255, 0, 0)                 
+)
 
 prey_list = []
 predators = []
@@ -29,8 +44,22 @@ def move(prey):
     prey.set_position(prey.calculate_next_position())
 
 def draw_prey(prey):
-    pygame.draw.circle(screen, prey.get_color(), prey.get_position(), prey.get_radius())
+    position = prey.get_position()
     
+    triangle_points = [
+        Vector2(2 * prey.get_radius(), 0).rotate_rad(prey.get_orientation() ),  
+        Vector2(-prey.get_radius(), prey.get_radius()).rotate_rad(prey.get_orientation() ),  
+        Vector2(-prey.get_radius(), -prey.get_radius()).rotate_rad(prey.get_orientation() )   
+    ]
+
+    translated_points = []
+    for p in triangle_points:
+        translated_point = (p.x + prey.get_position()[0], p.y + prey.get_position()[1]) 
+        translated_points.append(translated_point)
+
+    pygame.draw.polygon(screen, prey.get_color(), translated_points)
+
+
 # Main loop
 running = True
 while running:
@@ -43,7 +72,6 @@ while running:
 
     sim_controller.update_state()
 
-    # move(prey)
     draw_prey(prey)
     
     pygame.display.flip()
