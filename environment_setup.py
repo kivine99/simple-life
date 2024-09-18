@@ -1,6 +1,7 @@
 from environment import Environment
 from prey import Prey
 from predator import Predator
+from entity_generator import EntityGenerator
 from plant import Plant
 from memory import Memory
 from pygame.math import Vector2
@@ -10,11 +11,12 @@ import math
 
 class EnvironmentSetup:
     
-    def __init__(self, map_size: Tuple[int, int], num_prey: int, num_predators: int, num_plants: int):
-        self._map_size = map_size
+    def __init__(self, map_dimensions: Tuple[int, int], num_prey: int, num_predators: int, num_plants: int):
+        self._map_dimensions = map_dimensions
         self._num_prey = num_prey
         self._num_predators = num_predators
         self._num_plants = num_plants
+        self._entity_generator = EntityGenerator(map_dimensions)
 
     def initialize(self) -> Environment:
         prey_list = []
@@ -22,7 +24,7 @@ class EnvironmentSetup:
         plant_list = []
 
         for i in range(self._num_prey):
-            prey_position = self._random_position()
+            prey_position = self._entity_generator.generate_random_pos()
             prey = Prey(
                 position=prey_position,
                 velocity=Vector2(0, 0),  
@@ -41,8 +43,8 @@ class EnvironmentSetup:
             prey_list.append(prey)
 
         for i in range(self._num_plants):
-            plant_position = [random.uniform(0, self._map_size[0]),
-                              random.uniform(0, self._map_size[1])]
+            plant_position = [random.uniform(0, self._map_dimensions[0]),
+                              random.uniform(0, self._map_dimensions[1])]
             plant = Plant(
                 position=plant_position,
                 radius=5,
@@ -50,10 +52,4 @@ class EnvironmentSetup:
             )
             plant_list.append(plant)
 
-        return Environment(self._map_size, prey_list, predator_list, plant_list)
-
-    def _random_position(self) -> Vector2:
-        return Vector2(
-            random.uniform(0, self._map_size[0]),
-            random.uniform(0, self._map_size[1])   
-        )
+        return Environment(self._map_dimensions, prey_list, predator_list, plant_list)
