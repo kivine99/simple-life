@@ -23,25 +23,6 @@ class Animal(ABC):
     @classmethod
     def set_eat_energy_gained(cls, amount_gained: float) -> None:
         cls._eat_energy_gained = amount_gained
-    # @classmethod
-    # @abstractmethod
-    # def get_move_energy_lost(cls) -> float:
-    #     pass
-
-    # @classmethod
-    # @abstractmethod
-    # def get_eat_energy_gained(cls) -> float:
-    #     pass
-
-    # @classmethod
-    # @abstractmethod
-    # def set_move_energy_lost(cls, amount_lost: float) -> None:
-    #     pass
-
-    # @classmethod
-    # @abstractmethod
-    # def set_eat_energy_gained(cls, amount_gained: float) -> None:
-    #     pass
 
     def __init__(self, 
     position: list, 
@@ -126,18 +107,6 @@ class Animal(ABC):
             new_velocity = new_velocity.clamp_magnitude(self._max_speed)
 
         return new_velocity
-
-    def apply_force(self, force: Vector2) -> None:
-        if force.length() != 0:
-            force = force.clamp_magnitude(self._max_force)
-        acceleration = force / self._mass
-
-        self._velocity += acceleration
-        if self._velocity.length() != 0:
-            self._velocity = self._velocity.clamp_magnitude(self._max_speed)
-
-        self._position += self._velocity
-        self._orientation = math.atan2(self._velocity.y, self._velocity.x)%(math.pi*2) 
 
     def is_within_view(self, target_position: Vector2) -> bool:
         to_target = target_position - self._position
