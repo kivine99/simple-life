@@ -11,13 +11,17 @@ from pygame.math import Vector2
 
 pygame.init()
 
-screen_width = 800
-screen_height = 600
+screen_info = pygame.display.Info()
+screen_width = screen_info.current_w
+screen_height = screen_info.current_h - 150
+
+# screen_width = 800
+# screen_height = 600
 
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Simple life')
 
-environment = EnvironmentSetup(map_size=(screen_width,screen_height), num_prey=1, num_predators=0, num_plants=80).initialize()
+environment = EnvironmentSetup(map_size=(screen_width,screen_height), num_prey=10, num_predators=0, num_plants=5).initialize()
 sim_controller = SimController(environment)
 
 def draw_plant(screen: pygame.Surface, plant: Plant):
@@ -32,7 +36,7 @@ def draw_plant(screen: pygame.Surface, plant: Plant):
         draw_prey(p)
 
 def draw_plant(screen: pygame.Surface, plant: Plant):
-    pygame.draw.circle(screen, plant.get_color(), (int(plant.get_position().x), int(plant.get_position().y)), plant.get_size())
+    pygame.draw.circle(screen, plant.get_color(), (int(plant.get_position()[0]), int(plant.get_position()[1])), plant.get_radius())
 
 def draw_prey_fov(screen: pygame.Surface, prey: Prey, color=(255, 255, 255, 100), segments=30):
     orientation = prey.get_orientation()  
@@ -77,10 +81,10 @@ def draw_prey(screen: pygame.Surface, prey: Prey):
     rotated_points = []
     for point in triangle_points:
         rotated_point = point.rotate_rad(orientation)
-        translated_point = (rotated_point.x + position[0], rotated_point.y + position[1])
+        translated_point = [rotated_point.x + position[0], rotated_point.y + position[1]]
         rotated_points.append(translated_point)
 
-    draw_prey_fov(screen, prey)
+    # draw_prey_fov(screen, prey)
     pygame.draw.polygon(screen, prey.get_color(), rotated_points)
 
 
@@ -113,4 +117,4 @@ while running:
     draw_environment(screen, environment)
     
     pygame.display.flip()
-    pygame.time.Clock().tick(120)
+    pygame.time.Clock().tick(60000)
