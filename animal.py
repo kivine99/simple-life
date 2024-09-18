@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from memory import Memory
 from genome import Genome
 from pygame.math import Vector2
+from typing import List
 
 class Animal(ABC):
 
@@ -25,7 +26,7 @@ class Animal(ABC):
         cls._eat_energy_gained = amount_gained
 
     def __init__(self, 
-    position: list, 
+    position: List[int], 
     velocity: Vector2,
     mass: float,
     max_force: float,
@@ -52,7 +53,7 @@ class Animal(ABC):
         self._radius = radius
         self._color = color
 
-    def get_position(self) -> Vector2:
+    def get_position(self) -> list[int]:
         return self._position
 
     def get_orientation(self) -> float:
@@ -90,7 +91,8 @@ class Animal(ABC):
         self._orientation = math.atan2(new_velocity.y, new_velocity.x)
 
     def update_position(self):
-        self._position += self._velocity
+        self._position[0] += self._velocity.x
+        self._position[1] += self._velocity.y
 
     def update_energy(self, energy_amount):
         self._energy = min(energy_amount+self._energy, self._MAX_ENERGY)
@@ -108,14 +110,19 @@ class Animal(ABC):
 
         return new_velocity
 
-    def is_within_view(self, target_position: Vector2) -> bool:
-        to_target = target_position - self._position
-        distance_to_target = (target_position - self._position).length()
+    def is_within_view(self, target_position: List[int]) -> bool:
+        print(target_position)
+        to_target_x = target_position[0] - self._position[0]
+        to_target_y = target_position[1] - (self._position)[1]
+        distance_to_target = math.dist(self._position, target_position)#math.hypot(to_target_x, to_target_y)#(target_position - self._position).length()
 
         if distance_to_target > self._vision_range:
             return False
 
-        angle_to_target = math.atan2(to_target.y, to_target.x)%(2*math.pi)
+        dx = target_position[0] - self._position[0]
+        dy = target_position[1] - self._position[1]
+        angle_to_target = math.atan2(dy, dx)
+        # angle_to_target = self._position.angle_to(target_position)#math.atan2(to_target.y, to_target.x)%(2*math.pi)
         angle_difference = abs(angle_to_target - self._orientation)
 
         angle_difference = min(angle_difference, 2*math.pi - angle_difference)
