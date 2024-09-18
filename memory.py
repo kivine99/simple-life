@@ -2,6 +2,7 @@ from behaviours.behaviour import Behaviour
 from typing import Optional
 
 class Memory:
+    
     def __init__(self):
         self._last_behaviour = None
 
