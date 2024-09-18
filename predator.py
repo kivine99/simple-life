@@ -25,7 +25,7 @@ class Predator(Animal):
         cls._eat_plant_energy_gained = amount_gained
 
     def __init__(self, 
-    position: Vector2, 
+    position: list[int], 
     velocity: Vector2,
     mass: float,
     max_force: float,
