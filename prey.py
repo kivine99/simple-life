@@ -27,7 +27,7 @@ class Prey(Animal):
     #     cls._eat_plant_energy_gained = amount_gained
 
     def __init__(self, 
-    position: Vector2, 
+    position: list[int], 
     velocity: Vector2,
     mass: float,
     max_force: float,
@@ -61,7 +61,9 @@ class Prey(Animal):
 
         for plant in plants:
             plant_position = plant.get_position()
-            distance = self._position.distance_to(plant_position)
+            distance_x = plant_position[0] - self._position[0]
+            distance_y = plant_position[1] - self._position[1]
+            distance = math.hypot(distance_x, distance_y)#self._position.distance_to(plant_position)
             if distance < min_distance:
                 min_distance = distance
                 nearest_plant = plant
