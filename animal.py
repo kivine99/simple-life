@@ -6,8 +6,45 @@ from pygame.math import Vector2
 
 class Animal(ABC):
 
+    _MAX_ENERGY = 100
+
+    @classmethod
+    def get_move_energy_lost(cls) -> float:
+        return cls._move_energy_lost
+
+    @classmethod
+    def get_eat_energy_gained(cls) -> float:
+        return cls._eat_energy_gained
+
+    @classmethod
+    def set_move_energy_lost(cls, amount_lost: float) -> None:
+        cls._move_energy_lost = amount_lost 
+
+    @classmethod
+    def set_eat_energy_gained(cls, amount_gained: float) -> None:
+        cls._eat_energy_gained = amount_gained
+    # @classmethod
+    # @abstractmethod
+    # def get_move_energy_lost(cls) -> float:
+    #     pass
+
+    # @classmethod
+    # @abstractmethod
+    # def get_eat_energy_gained(cls) -> float:
+    #     pass
+
+    # @classmethod
+    # @abstractmethod
+    # def set_move_energy_lost(cls, amount_lost: float) -> None:
+    #     pass
+
+    # @classmethod
+    # @abstractmethod
+    # def set_eat_energy_gained(cls, amount_gained: float) -> None:
+    #     pass
+
     def __init__(self, 
-    position: Vector2, 
+    position: list, 
     velocity: Vector2,
     mass: float,
     max_force: float,
@@ -17,6 +54,7 @@ class Animal(ABC):
     fov: float, 
     memory: Memory, 
     genome: Genome, 
+    energy: float,
     radius: float, 
     color: tuple):
         self._position = position
@@ -29,6 +67,7 @@ class Animal(ABC):
         self._fov = fov
         self._memory = memory
         self._genome = genome
+        self._energy = energy
         self._radius = radius
         self._color = color
 
@@ -53,6 +92,9 @@ class Animal(ABC):
     def get_velocity(self) -> Vector2:
         return self._velocity
 
+    def get_energy(self) -> float:
+        return self._energy
+
     def get_radius(self) -> float:
         return self._radius
 
@@ -61,6 +103,29 @@ class Animal(ABC):
 
     def set_orientation(self, orientation: float) -> None:
         self._orientation = orientation%(2*math.pi)
+
+    def set_velocity(self, new_velocity: float) -> None:
+        self._velocity = new_velocity
+        self._orientation = math.atan2(new_velocity.y, new_velocity.x)
+
+    def update_position(self):
+        self._position += self._velocity
+
+    def update_energy(self, energy_amount):
+        self._energy = min(energy_amount+self._energy, self._MAX_ENERGY)
+
+    def calculate_new_velocity(self, force: Vector2):
+        new_velocity = self._velocity
+
+        if force.length() != 0:
+            force = force.clamp_magnitude(self._max_force)
+        acceleration = force / self._mass
+
+        new_velocity += acceleration
+        if new_velocity.length() != 0:
+            new_velocity = new_velocity.clamp_magnitude(self._max_speed)
+
+        return new_velocity
 
     def apply_force(self, force: Vector2) -> None:
         if force.length() != 0:
