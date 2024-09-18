@@ -4,6 +4,7 @@ from memory import Memory
 from genome import Genome
 from pygame.math import Vector2
 from typing import List
+from trig_utils import TrigUtils
 
 class Animal(ABC):
 
@@ -111,20 +112,14 @@ class Animal(ABC):
         return new_velocity
 
     def is_within_view(self, target_position: List[int]) -> bool:
-        print(target_position)
-        to_target_x = target_position[0] - self._position[0]
-        to_target_y = target_position[1] - (self._position)[1]
-        distance_to_target = math.dist(self._position, target_position)#math.hypot(to_target_x, to_target_y)#(target_position - self._position).length()
+        distance_to_target = math.dist(self._position, target_position)
 
         if distance_to_target > self._vision_range:
             return False
 
-        dx = target_position[0] - self._position[0]
-        dy = target_position[1] - self._position[1]
-        angle_to_target = math.atan2(dy, dx)
-        # angle_to_target = self._position.angle_to(target_position)#math.atan2(to_target.y, to_target.x)%(2*math.pi)
+        angle_to_target = TrigUtils.angle_from(self._position, target_position)
+        
         angle_difference = abs(angle_to_target - self._orientation)
-
         angle_difference = min(angle_difference, 2*math.pi - angle_difference)
 
         return angle_difference <= (self._fov / 2)
