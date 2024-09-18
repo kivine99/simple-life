@@ -6,11 +6,10 @@ from prey import Prey
 from pygame.math import Vector2
 from environment import Environment
 from animal import Animal
+from trig_utils import TrigUtils
 
 
 class WanderBehaviour(Behaviour):
-
-    ENERGY_COST = -.1 #TODO maybe make this more dynamic at some point
 
     @staticmethod
     def get_priority(prey: Prey, environment: Environment):
@@ -24,9 +23,6 @@ class WanderBehaviour(Behaviour):
 
 
     def execute(self) -> MoveBehaviourResult:
-
-        energy_cost = 0
-
         animal_position = self._animal.get_position()
         animal_orientation = self._animal.get_orientation()
 
@@ -50,7 +46,8 @@ class WanderBehaviour(Behaviour):
             random_point_x = circle_position[0] + math.cos(theta)*circle_radius
             random_point_y = circle_position[1] + math.sin(theta)*circle_radius
             random_point = Vector2(random_point_x, random_point_y)
-            self._previous_force_angle = animal_position.angle_to(random_point)
+
+            self._previous_force_angle = TrigUtils.angle_from(animal_position, random_point)
             self._previous_force_magnitude = .1
 
         new_velocity = self._animal.calculate_new_velocity(Vector2(math.cos(self._previous_force_angle)*self._previous_force_magnitude, math.sin(self._previous_force_angle)*self._previous_force_magnitude))
