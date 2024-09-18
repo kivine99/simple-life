@@ -6,6 +6,7 @@ from prey_behaviour_manager import PreyBehaviourManager
 from pygame.math import Vector2
 
 class SimController:
+    
     def __init__(self, environment):
         self._environment = environment
         self._prey_behaviour_manager = PreyBehaviourManager()
@@ -16,4 +17,4 @@ class SimController:
             chosen_behaviour = self._prey_behaviour_manager.choose_behaviour(p, self._environment)
             behaviour_result = chosen_behaviour.execute()
             if behaviour_result:
-                behaviour_result.apply_to_environment(self._environment)
+                behaviour_result.apply_result(self._environment)
