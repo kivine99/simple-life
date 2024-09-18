@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
 class Behaviour(ABC):
-    def __init__(self, animal, environment):
-        self._animal = animal
+    
+    def __init__(self, environment):
         self._environment = environment
 
     @staticmethod

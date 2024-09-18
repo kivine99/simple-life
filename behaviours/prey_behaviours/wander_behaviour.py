@@ -1,7 +1,7 @@
 from behaviours.behaviour import Behaviour
 import random
 import math
-from behaviour_results.no_effect_behaviour_result import NoEffectBehaviourResult
+from behaviour_results.move_behaviour_result import MoveBehaviourResult
 from prey import Prey
 from pygame.math import Vector2
 from environment import Environment
@@ -9,32 +9,52 @@ from animal import Animal
 
 
 class WanderBehaviour(Behaviour):
+
+    ENERGY_COST = -.1 #TODO maybe make this more dynamic at some point
+
+    @staticmethod
     def get_priority(prey: Prey, environment: Environment):
         return 100 #TODO: actually do something here
 
     def __init__(self, animal: Animal, environment:Environment):
-        super().__init__(animal, environment)
-        self._previous_force_direction = None
+        super().__init__(environment)
+        self._animal = animal
+        self._previous_force_angle = None
         self._previous_force_magnitude = None
 
-    def execute(self) -> NoEffectBehaviourResult:
-        prey_position = self._animal.get_position()
-        prey_orientation = self._animal.get_orientation()
+
+    def execute(self) -> MoveBehaviourResult:
+
+        energy_cost = 0
+
+        animal_position = self._animal.get_position()
+        animal_orientation = self._animal.get_orientation()
+
         #TODO: this should be part of the genome
         circle_radius = 20
         circle_distance_from_animal = 3
-        magnitude = .2
-        wander_angle = 2
+        circle_position = [animal_position[0] + math.cos(animal_orientation)*(circle_radius+circle_distance_from_animal), animal_position[1] - 
+        math.sin(animal_orientation)*(circle_radius+circle_distance_from_animal)]
 
-        circle_position = Vector2(prey_position[0] + math.cos(prey_orientation)*(circle_radius+circle_distance_from_animal), prey_position[1] - math.sin(prey_orientation)*(circle_radius+circle_distance_from_animal))
-        if self._previous_force_direction and self._previous_force_magnitude:
-            self._previous_force_direction = self._previous_force_direction.rotate_rad(random.uniform(0, wander_angle))
+        magnitude = .2
+        wander_angle = .1
+
+        #If wander was the previous behaviour
+        if isinstance(self._animal.get_memory().get_last_behaviour(), WanderBehaviour):
+            direction_vector = Vector2(math.cos(self._previous_force_angle), math.sin(self._previous_force_angle))
+            direction_vector = direction_vector.rotate_rad(random.uniform(-wander_angle, wander_angle))
+            self._previous_force_angle = math.atan2(direction_vector.y, direction_vector.x)
         else:
+            self._animal.get_memory().set_last_behaviour(self)
             theta = random.uniform(0, 2*math.pi)
             random_point_x = circle_position[0] + math.cos(theta)*circle_radius
             random_point_y = circle_position[1] + math.sin(theta)*circle_radius
             random_point = Vector2(random_point_x, random_point_y)
-            self._previous_force_direction = prey_position.angle_to(random_point)
+            self._previous_force_angle = animal_position.angle_to(random_point)
+            self._previous_force_magnitude = .1
 
-        self._animal.apply_force(Vector2(math.cos(self._previous_force_direction)*magnitude,
-                                       math.sin(self._previous_force_direction)*magnitude))
+        new_velocity = self._animal.calculate_new_velocity(Vector2(math.cos(self._previous_force_angle)*self._previous_force_magnitude, math.sin(self._previous_force_angle)*self._previous_force_magnitude))
+        return MoveBehaviourResult(self._animal, new_velocity, self._animal.get_move_energy_lost())
+
+    def invert_previous_force_angle(self):
+        self._previous_force_angle += math.pi
