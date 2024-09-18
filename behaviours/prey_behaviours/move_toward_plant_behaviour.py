@@ -20,6 +20,8 @@ class MoveTowardPlantBehaviour(Behaviour):
         super().__init__(environment)
         self._prey = prey
 
+    from pygame.math import Vector2
+
     def execute(self) -> MoveBehaviourResult:
         energy_cost = 0 
 
@@ -27,15 +29,15 @@ class MoveTowardPlantBehaviour(Behaviour):
         target_position = nearest_plant.get_position()
         prey_position = self._prey.get_position()
         
-        desired_direction = target_position - prey_position
-        
+        desired_direction = Vector2(target_position[0] - prey_position[0], target_position[1] - prey_position[1])
+
         if desired_direction.length() != 0:
             desired_direction = desired_direction.normalize()
         
         desired_velocity = desired_direction * self._prey.get_max_speed()
-        
+
         steering_force = desired_velocity - self._prey.get_velocity()
         
         new_velocity = self._prey.calculate_new_velocity(steering_force)
+
         return MoveBehaviourResult(self._prey, new_velocity, self._prey.get_move_energy_lost())
-        # self._animal.apply_force(steering_force)
