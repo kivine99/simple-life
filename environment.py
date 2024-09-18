@@ -3,6 +3,7 @@ from predator import Predator
 from plant import Plant
 from typing import Tuple
 from animal import Animal
+from entity_generator import EntityGenerator
 import random
 
 class Environment:
@@ -16,6 +17,7 @@ class Environment:
         self._prey = prey
         self._predators = predators
         self._plants = plants
+        self._entity_generator = EntityGenerator(map_dimensions)
 
     def get_prey(self) -> Tuple[Prey, ...]:
         return tuple(self._prey)
@@ -33,14 +35,7 @@ class Environment:
         self._predator.append(predator_to_add)
 
     def add_random_plant(self) -> None:
-        plant_position = [random.uniform(0, self._map_dimensions[0]),
-                              random.uniform(0, self._map_dimensions[1])]
-        plant = Plant(
-            position=plant_position,
-            radius=5.0,
-            color=(0, 255, 0) 
-        )
-        self._plants.append(plant)
+        self._plants.append(self._entity_generator.generate_random_plant())
 
     def remove_plant(self, plant_to_remove: Plant) -> None:
         self._plants.remove(plant_to_remove)
