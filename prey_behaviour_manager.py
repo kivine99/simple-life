@@ -1,9 +1,9 @@
 from behaviour_manager import BehaviourManager
-from behaviours.prey_behaviours.wander_behaviour import WanderBehaviour
+from behaviours.shared_behaviours.wander_behaviour import WanderBehaviour
 from behaviours.prey_behaviours.eat_plant_behaviour import EatPlantBehaviour
 from behaviours.prey_behaviours.move_toward_plant_behaviour import MoveTowardPlantBehaviour
 from behaviours.behaviour import Behaviour
-from prey import Prey
+from entities.prey import Prey
 import math
 from typing import Type
 from environment import Environment
