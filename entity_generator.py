@@ -1,10 +1,11 @@
-from typing import List
-from plant import Plant
+from typing import Tuple
+from entities.plant import Plant
 import random
+from pygame.math import Vector2
 
 class EntityGenerator:
 
-    def __init__(self, map_dimensions: List[int]):
+    def __init__(self, map_dimensions: Tuple[int, int]):
         self._map_dimensions = map_dimensions
 
     def generate_random_plant(self) -> Plant:
@@ -20,6 +21,6 @@ class EntityGenerator:
         
         return plant
 
-    def generate_random_pos(self) -> List[int]:
-        return [random.uniform(0, self._map_dimensions[0]), random.uniform(0, self._map_dimensions[1])]
+    def generate_random_pos(self) -> Vector2:
+        return Vector2(random.uniform(0, self._map_dimensions[0]), random.uniform(0, self._map_dimensions[1]))
 
