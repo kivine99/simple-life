@@ -1,7 +1,7 @@
-from plant import Plant
+from entities.plant import Plant
 from environment import Environment
 from behaviour_results.behaviour_result import BehaviourResult
-from prey import Prey
+from entities.prey import Prey
 
 class EatPlantBehaviourResult(BehaviourResult):
 
@@ -12,4 +12,4 @@ class EatPlantBehaviourResult(BehaviourResult):
 
     def apply_result(self, environment: Environment) -> None:
         environment.remove_plant(self._eaten_plant)
-        environment.update_animal_energy(self._prey, self._energy_gained)
+        self._prey.get_energy().increase_energy(self._energy_gained)
