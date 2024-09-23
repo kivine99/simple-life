@@ -1,7 +1,7 @@
 from environment import Environment
 from behaviour_results import *
 from behaviours.prey_behaviours import *
-from prey import Prey
+from entities.prey import Prey
 from prey_behaviour_manager import PreyBehaviourManager
 from pygame.math import Vector2
 
