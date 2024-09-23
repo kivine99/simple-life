@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from animal import Animal
+from entities.animal import Animal
 
 class BehaviourManager(ABC):
 
