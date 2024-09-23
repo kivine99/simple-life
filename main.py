@@ -1,8 +1,8 @@
 import pygame
 import sys
-from prey import Prey
-from predator import Predator
-from plant import Plant
+from entities.plant import Plant
+from entities.prey import Prey
+from entities.predator import Predator
 from environment import Environment
 from sim_controller import SimController
 from environment_setup import EnvironmentSetup
@@ -15,13 +15,10 @@ screen_info = pygame.display.Info()
 screen_width = screen_info.current_w
 screen_height = screen_info.current_h - 150
 
-# screen_width = 800
-# screen_height = 600
-
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Simple life')
 
-environment = EnvironmentSetup(map_size=(screen_width,screen_height), num_prey=10, num_predators=0, num_plants=5).initialize()
+environment = EnvironmentSetup(map_dimensions=(screen_width,screen_height), num_prey=3, num_predators=0, num_plants=5).initialize()
 sim_controller = SimController(environment)
 
 def draw_plant(screen: pygame.Surface, plant: Plant):
@@ -36,13 +33,13 @@ def draw_plant(screen: pygame.Surface, plant: Plant):
         draw_prey(p)
 
 def draw_plant(screen: pygame.Surface, plant: Plant):
-    pygame.draw.circle(screen, plant.get_color(), (int(plant.get_position()[0]), int(plant.get_position()[1])), plant.get_radius())
+    pygame.draw.circle(screen, plant.get_color(), (int(plant.get_position().x), int(plant.get_position().y)), plant.get_radius())
 
 def draw_prey_fov(screen: pygame.Surface, prey: Prey, color=(255, 255, 255, 100), segments=30):
-    orientation = prey.get_orientation()  
-    position = prey.get_position()  
-    vision_range = prey.get_vision_range()
-    fov_half = prey.get_fov() / 2 
+    orientation = prey.get_vision().get_orientation()  
+    position = prey.get_movement().get_position()  
+    vision_range = prey.get_vision().get_vision_range()
+    fov_half = prey.get_vision().get_fov() / 2 
 
     points = [position]
 
@@ -68,8 +65,8 @@ def draw_prey_fov(screen: pygame.Surface, prey: Prey, color=(255, 255, 255, 100)
 
 
 def draw_prey(screen: pygame.Surface, prey: Prey):
-    orientation = prey.get_orientation()
-    position = prey.get_position()
+    orientation = prey.get_vision().get_orientation()
+    position = prey.get_movement().get_position()
     radius = prey.get_radius()
 
     triangle_points = [
@@ -81,10 +78,10 @@ def draw_prey(screen: pygame.Surface, prey: Prey):
     rotated_points = []
     for point in triangle_points:
         rotated_point = point.rotate_rad(orientation)
-        translated_point = [rotated_point.x + position[0], rotated_point.y + position[1]]
+        translated_point = [rotated_point.x + position.x, rotated_point.y + position.y]
         rotated_points.append(translated_point)
 
-    # draw_prey_fov(screen, prey)
+    draw_prey_fov(screen, prey)
     pygame.draw.polygon(screen, prey.get_color(), rotated_points)
 
 
@@ -117,4 +114,4 @@ while running:
     draw_environment(screen, environment)
     
     pygame.display.flip()
-    pygame.time.Clock().tick(60000)
+    pygame.time.Clock().tick(120)
