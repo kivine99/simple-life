@@ -1,15 +1,16 @@
-from prey import Prey
-from predator import Predator
-from plant import Plant
+from entities.plant import Plant
+from entities.prey import Prey
+from entities.predator import Predator
+from entities.animal import Animal
 from typing import Tuple
-from animal import Animal
 from entity_generator import EntityGenerator
 import random
+from pygame.math import Vector2
 
 class Environment:
     
     def __init__(self, 
-    map_dimensions: tuple,
+    map_dimensions: tuple[int, int],
     prey: list[Prey], 
     predators: list[Predator],
     plants: list[Plant]):
@@ -41,9 +42,6 @@ class Environment:
         self._plants.remove(plant_to_remove)
         self.add_random_plant()
 
-    def update_animal_energy(self, animal: Animal, energy_amount: float) -> None:
-        animal.update_energy(energy_amount)
-
     def remove_animal(self, animal_to_remove: Animal) -> None:
         try: #TODO: consider refactoring this
             if isinstance(animal_to_remove, Prey):
@@ -53,30 +51,8 @@ class Environment:
         except ValueError:
             pass 
 
-    def move_animal(self, animal_to_move, velocity):
-        position = animal_to_move.get_position()
+    def out_of_bounds_x(self, pos: Vector2) -> bool:
+        return (pos.x < 0 or pos.x > self._map_dimensions[0])
 
-        last_behaviour = animal_to_move.get_memory().get_last_behaviour()
-
-        if last_behaviour and (position[0] < 0 or position[0] > self._map_dimensions[0] or
-                            position[1] < 0 or position[1] > self._map_dimensions[1]):
-            last_behaviour.invert_previous_force_angle()
-
-        if position[0] < 0:
-            position[0] = 0 
-            velocity.x = -velocity.x 
-
-        elif position[0] > self._map_dimensions[0]:
-            position[0] = self._map_dimensions[0]
-            velocity.x = -velocity.x
-
-        if position[1] < 0:
-            position[1] = 0
-            velocity.y = -velocity.y 
-
-        elif position[1] > self._map_dimensions[1]:
-            position[1] = self._map_dimensions[1]
-            velocity.y = -velocity.y
-
-        animal_to_move.set_velocity(velocity)
-        animal_to_move.update_position()
+    def out_of_bounds_y(self, pos: Vector2) -> bool:
+        return (pos.y < 0 or pos.y > self._map_dimensions[1])
