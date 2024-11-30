@@ -18,7 +18,8 @@ screen_height = screen_info.current_h - 150
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Simple life')
 
-environment = EnvironmentSetup(map_dimensions=(screen_width,screen_height), num_prey=3, num_predators=0, num_plants=5).initialize()
+environment = EnvironmentSetup(map_dimensions=(screen_width,screen_height), num_prey=6
+, num_predators=0, num_plants=5).initialize()
 sim_controller = SimController(environment)
 
 def draw_plant(screen: pygame.Surface, plant: Plant):
